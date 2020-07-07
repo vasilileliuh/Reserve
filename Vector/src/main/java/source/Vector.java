@@ -33,6 +33,13 @@ public class Vector {
                 vectorTwo.END_POINT.getX(), vectorOne.END_POINT.getY() + vectorTwo.END_POINT.getY()));
     }
 
+    public static Vector subtraction(Vector vectorOne, Vector vectorTwo) {
+        return new Vector(new Point(vectorOne.START_POINT.getX() +
+                vectorTwo.START_POINT.getX(), vectorOne.START_POINT.getY() +
+                vectorTwo.START_POINT.getY()), new Point(vectorOne.END_POINT.getX() +
+                vectorTwo.END_POINT.getX(), vectorOne.END_POINT.getY() + vectorTwo.END_POINT.getY()));
+    }
+
     private double projection(Vector vector, Axis axis) {
         double result = 0;
         switch (axis) {
@@ -50,6 +57,14 @@ public class Vector {
         return Math.toDegrees(Math.acos((vectorOne.PROJECTION_X * vectorTwo.PROJECTION_X +
                 vectorOne.PROJECTION_Y * vectorTwo.PROJECTION_Y) /
                 (module(vectorOne) * module(vectorTwo))));
+    }
+
+    public double getPROJECTION_X() {
+        return PROJECTION_X;
+    }
+
+    public double getPROJECTION_Y() {
+        return PROJECTION_Y;
     }
 
     @Override
