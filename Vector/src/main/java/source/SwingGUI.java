@@ -1,16 +1,20 @@
 package source;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
+
+import static com.sun.xml.internal.ws.spi.db.BindingContextFactory.LOGGER;
 
 public class SwingGUI {
     static JFrame frameOne, frameTwo;
     JLabel jlOne, jlTwo;
+    static JLabel jlThree;
     JTextField tfVectorOneStartP,
             tfVectorOneEndP,
             tfVectorTwoStartP,
             tfVectorTwoEndP;
-    JButton buttonAddition, buttonSubtraction;
+    JButton buttonAddition, buttonSubtraction, buttonTryAgain;
 
 
     public SwingGUI() {
@@ -23,6 +27,8 @@ public class SwingGUI {
         buttonSubtraction = new JButton("Minus");
         buttonAddition.setBounds(70, 200, 100, 40);//x axis, y axis, width, height
         buttonSubtraction.setBounds(240, 200, 100, 40);
+        buttonTryAgain = new JButton("Try Again");
+        buttonTryAgain.setBounds(155, 200, 100, 40);//x axis, y axis, width, height
 
         tfVectorOneStartP = new JTextField();
         tfVectorOneEndP = new JTextField();
@@ -39,18 +45,32 @@ public class SwingGUI {
         tfVectorTwoEndP.setText("5,15");
 
         buttonAddition.addActionListener(e -> {
-            Vector result = Vector.sum(makeVectorFromInput(tfVectorOneStartP.getText(), tfVectorOneEndP.getText()),
-                    makeVectorFromInput(tfVectorTwoStartP.getText(), tfVectorTwoEndP.getText()));
-            showResult(result, e);
+            try {
+                Vector result = Vector.sum(makeVectorFromInput(tfVectorOneStartP.getText(), tfVectorOneEndP.getText()),
+                        makeVectorFromInput(tfVectorTwoStartP.getText(), tfVectorTwoEndP.getText()));
+                showResult(result, e);
+            } catch (Exception exception) {
+                showResult();
+            }
+
         });
         buttonSubtraction.addActionListener(e -> {
-            Vector result = Vector.subtraction(makeVectorFromInput(tfVectorOneStartP.getText(), tfVectorOneEndP.getText()),
-                    makeVectorFromInput(tfVectorTwoStartP.getText(), tfVectorTwoEndP.getText()));
-            showResult(result, e);
+            try {
+                Vector result = Vector.subtraction(makeVectorFromInput(tfVectorOneStartP.getText(), tfVectorOneEndP.getText()),
+                        makeVectorFromInput(tfVectorTwoStartP.getText(), tfVectorTwoEndP.getText()));
+                showResult(result, e);
+            } catch (Exception exception) {
+                showResult();
+            }
+        });
+        buttonTryAgain.addActionListener(e -> {
+            frameOne.setVisible(true);
+            frameTwo.setVisible(false);
         });
 
         jlOne = new JLabel("Vector AB:");
         jlTwo = new JLabel("Second CD:");
+        jlThree = new JLabel();
         jlOne.setBounds(30, 50, 100, 30);
         jlTwo.setBounds(30, 110, 100, 30);
 
@@ -67,36 +87,49 @@ public class SwingGUI {
         frameOne.setVisible(true);//making the frame visible
 
         frameTwo.setSize(410, 320);
+        frameTwo.add(buttonTryAgain);
         frameTwo.setLayout(null);//using no layout man
     }
 
 
-    private static Vector makeVectorFromInput(String StartPoint, String EndPoint) {
+    private static Vector makeVectorFromInput(String StartPoint, String EndPoint) throws NumberFormatException {
         return new Vector(makePoint(StartPoint), makePoint(EndPoint));
     }
 
-    private static Point makePoint(String input) {
+    private static Point makePoint(String input) throws NumberFormatException {
         String[] parts = input.split(",");
-        return new Point(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]));
+        try {
+            return new Point(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]));
+        } catch (NumberFormatException e) {
+            LOGGER.info(e.getClass().getName());
+            throw new NumberFormatException();
+        }
+    }
+
+    private static void showResult() {
+        jlThree.setText("Something went wrong!");
+        jlThree.setBounds(70, 100, 300, 30);
+        frameTwo.add(jlThree);
+        frameOne.setVisible(false);
+        frameTwo.setVisible(true);
     }
 
     private static void showResult(Vector result, ActionEvent event) {
         String command = event.getActionCommand();
-        JLabel label;
         switch (command) {
             case "Plus":
-                label = new JLabel("Sum resulting vector = (" + Math.round(result.getPROJECTION_X()) +
+                jlThree.setText("Sum resulting vector = (" + Math.round(result.getPROJECTION_X()) +
                         ", " + Math.round(result.getPROJECTION_Y()) + ")");
                 break;
             case "Minus":
-                label = new JLabel("Subtraction resulting vector = (" + Math.round(result.getPROJECTION_X()) +
+                jlThree.setText("Subtraction resulting vector = (" + Math.round(result.getPROJECTION_X()) +
                         ", " + Math.round(result.getPROJECTION_Y()) + ")");
                 break;
             default:
-                label = new JLabel("Something went wrong!");
+                jlThree.setText("Something went wrong!");
         }
-        label.setBounds(30, 100, 300, 30);
-        frameTwo.add(label);
+        jlThree.setBounds(70, 100, 300, 30);
+        frameTwo.add(jlThree);
         frameOne.setVisible(false);
         frameTwo.setVisible(true);
     }
