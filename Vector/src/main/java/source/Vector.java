@@ -34,10 +34,9 @@ public class Vector {
     }
 
     public static Vector subtraction(Vector vectorOne, Vector vectorTwo) {
-        return new Vector(new Point(vectorOne.START_POINT.getX() +
-                vectorTwo.START_POINT.getX(), vectorOne.START_POINT.getY() +
-                vectorTwo.START_POINT.getY()), new Point(vectorOne.END_POINT.getX() +
-                vectorTwo.END_POINT.getX(), vectorOne.END_POINT.getY() + vectorTwo.END_POINT.getY()));
+        return new Vector(new Point(vectorOne.START_POINT.getX(), vectorOne.START_POINT.getY()),
+                new Point(vectorOne.END_POINT.getX() + vectorTwo.END_POINT.getX() - vectorTwo.START_POINT.getX(),
+                        vectorOne.END_POINT.getY() + vectorTwo.END_POINT.getY() - vectorTwo.START_POINT.getY()));
     }
 
     private double projection(Vector vector, Axis axis) {
