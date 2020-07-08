@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
-import static com.sun.xml.internal.ws.spi.db.BindingContextFactory.LOGGER;
+//import static com.sun.xml.internal.ws.spi.db.BindingContextFactory.LOGGER;
 
 public class SwingGUI {
     static JFrame frameOne, frameTwo;
@@ -34,10 +34,18 @@ public class SwingGUI {
         tfVectorOneEndP = new JTextField();
         tfVectorTwoStartP = new JTextField();
         tfVectorTwoEndP = new JTextField();
-        tfVectorOneStartP.setBounds(140, 50, 80, 30);
-        tfVectorTwoStartP.setBounds(140, 110, 80, 30);
-        tfVectorOneEndP.setBounds(240, 50, 80, 30);
-        tfVectorTwoEndP.setBounds(240, 110, 80, 30);
+        tfVectorOneStartP.setBounds(160, 50, 80, 30);
+        tfVectorTwoStartP.setBounds(160, 110, 80, 30);
+        tfVectorOneEndP.setBounds(260, 50, 80, 30);
+        tfVectorTwoEndP.setBounds(260, 110, 80, 30);
+        tfVectorOneStartP.setHorizontalAlignment(JTextField.RIGHT);
+        tfVectorOneEndP.setHorizontalAlignment(JTextField.RIGHT);
+        tfVectorTwoStartP.setHorizontalAlignment(JTextField.RIGHT);
+        tfVectorTwoEndP.setHorizontalAlignment(JTextField.RIGHT);
+        tfVectorOneStartP.setMargin(new Insets(0, 5, 0, 5));
+        tfVectorOneEndP.setMargin(new Insets(0, 5, 0, 5));
+        tfVectorTwoStartP.setMargin(new Insets(0, 5, 0, 5));
+        tfVectorTwoEndP.setMargin(new Insets(0, 5, 0, 5));
 
         tfVectorOneStartP.setText("0,0");
         tfVectorOneEndP.setText("0,10");
@@ -71,8 +79,8 @@ public class SwingGUI {
         jlOne = new JLabel("Vector AB:");
         jlTwo = new JLabel("Second CD:");
         jlThree = new JLabel();
-        jlOne.setBounds(30, 50, 100, 30);
-        jlTwo.setBounds(30, 110, 100, 30);
+        jlOne.setBounds(70, 50, 100, 30);
+        jlTwo.setBounds(70, 110, 100, 30);
 
         frameOne.add(buttonAddition);//adding button in JFrame
         frameOne.add(buttonSubtraction);
@@ -88,9 +96,8 @@ public class SwingGUI {
 
         frameTwo.setSize(410, 320);
         frameTwo.add(buttonTryAgain);
-        frameTwo.setLayout(null);//using no layout man
+        frameTwo.setLayout(null);
     }
-
 
     private static Vector makeVectorFromInput(String StartPoint, String EndPoint) throws NumberFormatException {
         return new Vector(makePoint(StartPoint), makePoint(EndPoint));
@@ -101,17 +108,15 @@ public class SwingGUI {
         try {
             return new Point(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]));
         } catch (NumberFormatException e) {
-            LOGGER.info(e.getClass().getName());
+//            LOGGER.info(e.getClass().getName());
             throw new NumberFormatException();
         }
     }
 
     private static void showResult() {
         jlThree.setText("Something went wrong!");
-        jlThree.setBounds(70, 100, 300, 30);
-        frameTwo.add(jlThree);
-        frameOne.setVisible(false);
-        frameTwo.setVisible(true);
+        jlThree.setBounds(140, 100, 150, 30);
+        frameManagement();
     }
 
     private static void showResult(Vector result, ActionEvent event) {
@@ -128,10 +133,13 @@ public class SwingGUI {
             default:
                 jlThree.setText("Something went wrong!");
         }
-        jlThree.setBounds(70, 100, 300, 30);
+        jlThree.setBounds(116, 100, 250, 30);
+        frameManagement();
+    }
+
+    private static void frameManagement() {
         frameTwo.add(jlThree);
         frameOne.setVisible(false);
         frameTwo.setVisible(true);
     }
-
 }
