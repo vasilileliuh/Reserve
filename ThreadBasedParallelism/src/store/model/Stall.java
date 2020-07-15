@@ -27,15 +27,30 @@ public class Stall extends Thread {
 //                seller.serveTheBuyer(buyers.poll());
 //                servedBuyers.incrementAndGet();
 //            });
+
         for (int i = 0; i < sellers.size(); i++) {
             Seller sell = sellers.get(i);
             Thread thread = new Thread(() -> {
                 sell.serveTheBuyer(buyers.poll());
-                servedBuyers.incrementAndGet();
+                synchronized (servedBuyers) {
+                    servedBuyers.incrementAndGet();
+                }
             });
             thread.start();
+
+            if (i == sellers.size() - 1) {
+                try {
+                    thread.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        synchronized (servedBuyers) {
             log.info(performanceService.checkPerformance(servedBuyers.get()));
         }
+
 
     }
 }

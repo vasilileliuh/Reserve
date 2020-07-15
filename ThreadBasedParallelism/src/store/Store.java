@@ -25,9 +25,10 @@ public class Store {
      * Maximum buyer count
      */
     byte storeSize = 100;
+    byte temp = storeSize;
 
     public void openStore() {
-        SellersService.inviteSellers(sellers, 4 );
+        SellersService.inviteSellers(sellers, 3);
         BuyerService.inviteNewBuyers(buyers, storeSize);
         LOGGER.info("Store is open");
         startTrading();
@@ -35,9 +36,10 @@ public class Store {
 
     private void startTrading() {
         LOGGER.info("Start trading");
-        while (true) {
+        while (temp > 0) {
             stall.trade(buyers);
             BuyerService.inviteNewBuyers(buyers, storeSize);
+            temp--;
         }
     }
 }
