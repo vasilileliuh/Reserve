@@ -22,42 +22,51 @@ public class SimpleSubmitExample {
     public static void main(String[] args) {
 
         SMPPSession session = new SMPPSession();
+
         try {
             LOGGER.info("Connecting");
             String systemId = session.connectAndBind("localhost", 8056,
-                    new BindParameter(BindType.BIND_TX, "j", "jpwda", "cp",
+                    new BindParameter(BindType.BIND_TRX, "guessId", "jpwda23", "cp",
                             TypeOfNumber.UNKNOWN, NumberingPlanIndicator.UNKNOWN, null));
-            LOGGER.info("Connected with SMSC with system id {}" + systemId);
+            LOGGER.info("Connected with SMSC with system id: " + systemId);
+//          modifications with infinite while loop
+            while (true) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    LOGGER.error("An Interrupted Exception occurred: ", e);
+                }
 
-            try {
-                String messageId = session.submitShortMessage("CMT",
-                        TypeOfNumber.INTERNATIONAL, NumberingPlanIndicator.UNKNOWN, "1616",
-                        TypeOfNumber.INTERNATIONAL, NumberingPlanIndicator.UNKNOWN, "628176504657",
-                        new ESMClass(), (byte) 0, (byte) 1, TIME_FORMATTER.format(new Date()), null,
-                        new RegisteredDelivery(SMSCDeliveryReceipt.DEFAULT),
-                        (byte) 0, new GeneralDataCoding(Alphabet.ALPHA_DEFAULT, MessageClass.CLASS1, false),
-                        (byte) 0, "jSMPP simplify SMPP on Java platform".getBytes());
-                LOGGER.info("Message submitted, message_id is {}" + messageId);
-            } catch (PDUException e) {
-                // Invalid PDU parameter
-                LOGGER.error("Invalid PDU parameter", e);
-            } catch (ResponseTimeoutException e) {
-                // Response timeout
-                LOGGER.error("Response timeout", e);
-            } catch (InvalidResponseException e) {
-                // Invalid response
-                LOGGER.error("Receive invalid response", e);
-            } catch (NegativeResponseException e) {
-                // Receiving negative response (non-zero command_status)
-                LOGGER.error("Receive negative response, e");
-            } catch (IOException e) {
-                LOGGER.error("IO error occurred", e);
+                try {
+                    String messageId = session.submitShortMessage("CMT",
+                            TypeOfNumber.INTERNATIONAL, NumberingPlanIndicator.UNKNOWN, "1616",
+                            TypeOfNumber.INTERNATIONAL, NumberingPlanIndicator.UNKNOWN, "628176504657",
+                            new ESMClass(), (byte) 0, (byte) 1, TIME_FORMATTER.format(new Date()), null,
+                            new RegisteredDelivery(SMSCDeliveryReceipt.DEFAULT),
+                            (byte) 0, new GeneralDataCoding(Alphabet.ALPHA_DEFAULT, MessageClass.CLASS1, false),
+                            (byte) 0, "jSMPP simplify SMPP on Java platform".getBytes());
+                    LOGGER.info("Message submitted, message_id is: " + messageId);
+                } catch (PDUException e) {
+                    // Invalid PDU parameter
+                    LOGGER.error("Invalid PDU parameter", e);
+                } catch (ResponseTimeoutException e) {
+                    // Response timeout
+                    LOGGER.error("Response timeout", e);
+                } catch (InvalidResponseException e) {
+                    // Invalid response
+                    LOGGER.error("Receive invalid response", e);
+                } catch (NegativeResponseException e) {
+                    // Receiving negative response (non-zero command_status)
+                    LOGGER.error("Receive negative response, e");
+                } catch (IOException e) {
+                    LOGGER.error("IO error occurred", e);
+                }
+
+//            session.unbindAndClose();
             }
-
-            session.unbindAndClose();
-
         } catch (IOException e) {
             LOGGER.error("Failed connect and bind to host", e);
+
         }
     }
 
