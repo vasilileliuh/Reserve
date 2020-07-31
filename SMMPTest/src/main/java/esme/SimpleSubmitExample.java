@@ -1,12 +1,11 @@
-package examples;
+package esme;
 
 import org.jsmpp.InvalidResponseException;
 import org.jsmpp.PDUException;
 import org.jsmpp.bean.*;
 import org.jsmpp.extra.NegativeResponseException;
 import org.jsmpp.extra.ResponseTimeoutException;
-import org.jsmpp.session.BindParameter;
-import org.jsmpp.session.SMPPSession;
+import org.jsmpp.session.*;
 import org.jsmpp.util.AbsoluteTimeFormatter;
 import org.jsmpp.util.TimeFormatter;
 import org.apache.log4j.*;
@@ -42,7 +41,7 @@ public class SimpleSubmitExample {
                             TypeOfNumber.INTERNATIONAL, NumberingPlanIndicator.UNKNOWN, "1616",
                             TypeOfNumber.INTERNATIONAL, NumberingPlanIndicator.UNKNOWN, "628176504657",
                             new ESMClass(), (byte) 0, (byte) 1, TIME_FORMATTER.format(new Date()), null,
-                            new RegisteredDelivery(SMSCDeliveryReceipt.DEFAULT),
+                            new RegisteredDelivery(SMSCDeliveryReceipt.SUCCESS_FAILURE), //DEFAULT
                             (byte) 0, new GeneralDataCoding(Alphabet.ALPHA_DEFAULT, MessageClass.CLASS1, false),
                             (byte) 0, "jSMPP simplify SMPP on Java platform".getBytes());
                     LOGGER.info("Message submitted, message_id is: " + messageId);
@@ -63,11 +62,13 @@ public class SimpleSubmitExample {
                 }
 
 //            session.unbindAndClose();
+                MessageReceiverListener receiverListener = new MessageReceiverListener();
+                session.setMessageReceiverListener(receiverListener);
             }
         } catch (IOException e) {
             LOGGER.error("Failed connect and bind to host", e);
-
         }
+
     }
 
 }

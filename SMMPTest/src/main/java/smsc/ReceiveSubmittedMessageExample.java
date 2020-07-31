@@ -1,9 +1,10 @@
-package examples;
+package smsc;
 
 import org.apache.log4j.Logger;
 import org.jsmpp.PDUStringException;
 import org.jsmpp.SMPPConstant;
 import org.jsmpp.session.*;
+
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
@@ -37,6 +38,7 @@ public class ReceiveSubmittedMessageExample {
                     // accepting request and send bind response immediately
                     LOGGER.info("Accepting bind request");
                     request.accept(request.getSystemId());
+
                     try {
                         Thread.sleep(20000);
                     } catch (InterruptedException e) {
@@ -50,10 +52,12 @@ public class ReceiveSubmittedMessageExample {
                 LOGGER.error("No binding request made after 5000 millisecond", e);
             }
 
+//            Original part
 //            LOGGER.info("Closing session");
 //            session.unbindAndClose();
 //            LOGGER.info("Closing session listener");
 //            sessionListener.close();
+
         } catch (PDUStringException e) {
             LOGGER.error("PDUString exception", e);
         } catch (IOException e) {
